@@ -60,29 +60,46 @@ export class CustomTextInput extends Component {
   }
 
   componentDidMount() {
-    install(findNodeHandle(this.input), this.props.customKeyboardType);
+      // allegedly, android doesn't like these
+      //install(findNodeHandle(this.input), this.props.customKeyboardType);
   }
 
   componentWillUnmount() {
-    uninstall(findNodeHandle(this.input));
+      //uninstall(findNodeHandle(this.input));
   }
 
+        /*
   componentDidUpdate(prevProps) {
     if (this.props.customKeyboardType !== prevProps.customKeyboardType) {
       install(findNodeHandle(this.input), this.props.customKeyboardType);
     }
   }
+  */
 
   onRef = ref => {
     this.input = ref;
   }
 
+  focus = () => {
+    if (this.input.__isMounted && !this.input.isFocused()) {
+      this.input.focus()
+    }
+  }
+
+  blur = () => {
+    if (this.input.__isMounted && this.input.isFocused()) {
+      this.input.blur()
+    }
+  }
+
+  hideStandardKeyboard = () => {
+    hideStandardKeyboard(findNodeHandle(this.input))
+  }
+
   render() {
     const { customKeyboardType, ...others } = this.props;
     return (
-      <View>
         <TextInput {...others} ref={this.onRef} />
-      </View>
     );
   }
 }
