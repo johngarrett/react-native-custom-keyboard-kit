@@ -11,7 +11,7 @@ import {
   Text,
 } from 'react-native';
 
-const { CustomKeyboardKit} = NativeModules;
+const { CustomKeyboardKit } = NativeModules;
 
 const {
   install, uninstall,
@@ -19,6 +19,9 @@ const {
   moveLeft, moveRight,
   switchSystemKeyboard,
   hideKeyboard,
+  setText,
+  getText,
+  hideStandardKeyboard
 } = CustomKeyboardKit;
 
 export {
