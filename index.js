@@ -60,6 +60,10 @@ export class CustomTextInput extends Component {
     install(findNodeHandle(this.input), this.props.customKeyboardType);
   }
 
+  componentWillUnmount() {
+    uninstall(findNodeHandle(this.input));
+  }
+
   componentDidUpdate(prevProps) {
     if (this.props.customKeyboardType !== prevProps.customKeyboardType) {
       install(findNodeHandle(this.input), this.props.customKeyboardType);
