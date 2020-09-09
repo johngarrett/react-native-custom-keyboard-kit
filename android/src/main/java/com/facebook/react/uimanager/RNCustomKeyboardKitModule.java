@@ -85,9 +85,15 @@ public class RNCustomKeyboardKitModule extends ReactContextBaseJavaModule {
 
           edit.setTag(TAG_ID, createCustomKeyboardKit(activity, tag, type));
 
+          final View.OnFocusChangeListener prevListener = edit.getOnFocusChangeListener();
+
           edit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(final View v, boolean hasFocus) {
+              // use the previous listener to update focus
+              if (prevListener != null) {
+                prevListener.onFocusChange(v, hasFocus);
+              }
               if (hasFocus) {
                 View keyboard = (View)edit.getTag(TAG_ID);
                 if (keyboard.getParent() == null) {
@@ -181,6 +187,41 @@ public class RNCustomKeyboardKitModule extends ReactContextBaseJavaModule {
         int end = Math.max(edit.getSelectionEnd(), 0);
         edit.getText().replace(Math.min(start, end), Math.max(start, end),
                 text, 0, text.length());
+      }
+    });
+  }
+
+  @ReactMethod
+  public void setText(final int tag, final String text) {
+    UiThreadUtil.runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        final Activity activity = getCurrentActivity();
+        final ReactEditText edit = getEditById(tag);
+        if (edit == null) {
+          return;
+        }
+
+        edit.setText(text);
+
+        edit.setSelection(text.length());
+      }
+    });
+  }
+
+  @ReactMethod
+  public void getText(final int tag, final Promise promise) {
+    UiThreadUtil.runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        final Activity activity = getCurrentActivity();
+        final ReactEditText edit = getEditById(tag);
+        if (edit == null) {
+          // promise.reject(new Error());
+          return;
+        }
+
+        promise.resolve(edit.getText().toString());
       }
     });
   }
